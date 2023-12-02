@@ -46,6 +46,6 @@ RUN curl -o /home/ark/steamcmd.zip https://steamcdn-a.akamaihd.net/client/instal
 RUN rm -rf /root/.cache/winetricks/corefonts
 
 USER ark
-RUN sudo xvfb-run --auto-servernum winetricks --unattended corefonts vcrun2015 gecko
+#RUN sudo xvfb-run --auto-servernum winetricks --unattended corefonts vcrun2015 gecko
 
 RUN xvfb-run --auto-servernum wine /home/ark/steamcmd.exe +force_install_dir /home/ark +login anonymous +app_update 2399830 +quit
