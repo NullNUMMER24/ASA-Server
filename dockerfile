@@ -1,32 +1,24 @@
 # Use a Debian Image as Base Image
-FROM debian:latest
+FROM alpine:latest
 
-# Set a working dir
-WORKDIR /opt/steamcmd
+# Install necessary packages
+RUN apk --no-cache add wine xvfb curl unzip
 
-# create ark user
-RUN useradd -p ark -m -d /home/ark ark
+# Set environment variables for X11 forwarding
+ENV DISPLAY=:0
+ENV WINEPREFIX=/root/.wine
 
-# Install steamcmd
-RUN apt -y update; apt -y install software-properties-common; apt-add-repository non-free; dpkg --add-architecture i386; apt -y update
+# Create a non-root user (optional but recommended for security)
+RUN adduser -D -u 1000 wineuser
+USER wineuser
 
-# Install wine
-RUN apt -y update && apt -y install wine wine64 mingw-w64 screen steamcmd wget xvfb  
-
-USER ark
-
-RUN mkdir -p /home/ark/ark_server
-
-ENV WINEARCH=win64 
-ENV WINEPREFIX=/home/ark/.wine64 
-ENV TERM = linux
-
-RUN steamcmd +@sSteamCmdForcePlatformType windows +force_install_dir /home/ark/ark_server +login anonymous +app_update 1829350 +exit
+# Set the working directory
+WORKDIR /home/wineuser
 
 # Downlaod steamcmd
-RUN wget -o /opt/steamcmd/steamcmd https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip && unzip steamcmd.zip -d /opt/steamcmd/steamcmd.exe && rm steamcmd.zip
+RUN curl -o /home/wineuser/steamcmd.zip https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip && unzip steamcmd.zip -d /home/wineuser/steamcmd.exe && rm /home/wineuser/steamcmd.zip
 
-RUN xvfb --auto-servernum wine /opt/steamcmd/steamcmd.exe +force_install_dir /opt/ark +login anonymous +app_update 2399830 +quit
+RUN xvfb-run --auto-servernum wine /home/wineuser/steamcmd.exe +force_install_dir /opt/ark +login anonymous +app_update 2399830 +quit
 
 #RUN wine /opt/steamcmd/steamcmd.exe +force_install_dir /opt/ark +login anonymous +app_update 2399830 +quit 
 
