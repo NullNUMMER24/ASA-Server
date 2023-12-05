@@ -1,5 +1,12 @@
 FROM ubuntu:latest
 
+# Install steamcmd
+RUN add-apt-repository multiverse; dpkg --add-architecture i386; apt update
+RUN echo 2|apt install -y steamcmd
+
+# Create Ark user
+RUN useradd -m -p "ark" ark
+
 # Install some tools
 RUN apt-get update \
 	&& apt-get install -y --no-install-recommends \
@@ -15,14 +22,13 @@ RUN dpkg --add-architecture i386 \
 				wine-stable \
 				winetricks \
 				wine32 \
+        		wine64 \
 				libgl1-mesa-glx:i386 \
 		&& rm -rf /var/lib/apt/lists/*
 
-# Create Ark user
-RUN useradd -m -p "ark" ark
+# Install ASA Files
+RUN /usr/games/steamcmd +force_install_dir /home/ark/arkserver +login anonymous +app_update 2430930 +quit
 
-# Set up sudo without password prompt for the Ark user
-RUN echo 'ark ALL=(ALL) NOPASSWD: ALL' > /etc/sudoers.d/ark-nopasswd
 
 # Create wine dir
 RUN mkdir -p /home/ark/.cache/wine
@@ -37,8 +43,9 @@ RUN mkdir -p /opt/wine-stable/share/wine/gecko && \
 RUN mkdir -p /opt/wine-stable/share/wine/gecko && \
     curl -o /opt/wine-stable/share/wine/gecko/wine-gecko-2.47.4-x86_64.msi https://dl.winehq.org/wine/wine-gecko/2.47.4/wine-gecko-2.47.4-x86_64.msi
 
-ENV WINEPREFIX=/home/ark/prefix32
-ENV WINEARCH=win32
+#ENV WINEPREFIX=/home/ark/prefix32
+#ENV WINEARCH=win32
+
 
 # Download steamcmd
 RUN curl -o /home/ark/steamcmd.zip https://steamcdn-a.akamaihd.net/client/installer/steamcmd.zip && unzip /home/ark/steamcmd.zip -d /home/ark/steamcmd.exe && rm /home/ark/steamcmd.zip
