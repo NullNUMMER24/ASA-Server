@@ -3,6 +3,10 @@
 # Install server / check for updates
 steamcmd +login anonymous +app_update 2430930 validate +quit
 
+# Copy configfiles
+cp -r /usr/share/GameUserSettings.ini $ARK_PATH/Saved/Config/WindowsServer/GameUserSettings.ini
+cp -r /usr/share/Game.ini $ARK_PATH/Saved/Config/WindowsServer/Game.ini
+
 # Start server with proton
 SERVER_CMD="$PROTON run \"${ARK_PATH}/Binaries/Win64/ArkAscendedServer.exe\" \
   \"TheIsland_WP?listen?SessionName=${SESSION_NAME}?ServerAdminPassword=${ADMIN_PASSWORD}?MapPlayerLocation=${ShowPlayerOnMAP}?Port=${GAME_PORT}?PreventDownloadSurvivors${PreventSurvivorDownload}?PreventDownloadItems=${PreventItemDownload}?PreventDownloadDinos=${PreventDinoDownload}?PreventUploadSurvivors=${PreventSurvivorUpload}?PreventUploadItems=${PreventItemUpload}?PreventUploadDinos=${PreventDinoUpload}?QueryPort=${QUERY_PORT}?MaxPlayers=${MAX_PLAYERS}?\""

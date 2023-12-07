@@ -31,8 +31,8 @@ COPY start-ark.sh /usr/local/bin/start-ark
 RUN chmod +x /usr/local/bin/start-ark
 
 # Copy GameUserSettings.ini and Game.ini
-COPY GameUserSettings.ini $ARK_PATH/Saved/Config/WindowsServer/GameUserSettings.ini
-COPY GameUserSettings.ini $ARK_PATH/Saved/Config/WindowsServer/Game.ini
+COPY GameUserSettings.ini /usr/share/GameUserSettings.ini
+COPY Game.ini /usr/share/Game.ini
 
 
 # Make image smaller
