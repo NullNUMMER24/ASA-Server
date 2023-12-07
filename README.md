@@ -11,3 +11,7 @@ https://steamdb.info/
 ```
 docker run -p 7777:7777/udp -p 7778:7778/udp -p 27015:27015/udp -d my-ark-server
 ```
+# Start server with docker-compose
+```
+sudo docker-compose up --build
+```
