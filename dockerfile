@@ -7,11 +7,11 @@ RUN apt -y update && apt -y upgrade && apt -y install curl
 RUN add-apt-repository multiverse; dpkg --add-architecture i386; apt update
 RUN echo 2|apt install -y steamcmd
 
-# Create Ark user
-RUN useradd -m -p "ark" ark
+# Variables
+ENV STEAM_PATH=$HOME/.steam/steam
 
 # Install some tools
-RUN apt -y install unzip ca-certificates xvfb
+RUN apt -y install unzip ca-certificates xvfb git make curl
 
 # Create folder for ark server
 RUN mkdir -p /opt/arkserver
@@ -22,24 +22,31 @@ RUN dpkg --add-architecture i386 && apt -y install -y wine-stable winetricks win
 # Install ASA Files
 RUN /usr/games/steamcmd +force_install_dir /opt/arkserver +login anonymous +app_update 2430930 +quit
 
-# Install git and make
-RUN apt -y update && apt -y install git make
+# Set workdir to steam path
+WORKDIR $STEAM_PATH
 
 # Make compattools folder
-RUN mkdir -p /home/ark/.steam/steam/compatibilitytools.d
+RUN mkdir -p compatibilitytools.d
 
 # Install proton
-RUN curl -LJO "https://github.com/ValveSoftware/Proton/archive/refs/tags/proton-8.0-4.zip" && unzip Proton-proton-8.0-4.zip
-RUN cp -r Proton-proton-8.0-4/files/share/default_pfx
-USER ark
-RUN make install
+RUN curl -LJO "https://github.com/ValveSoftware/Proton/archive/refs/tags/proton-8.0-4.zip" && unzip Proton-proton-8.0-4.zip -C compatibilitytools.d/
+RUN mkdir steamapps/compatdata/2430930
+RUN cp -r compatibilitytools.d/Proton-proton-8.0-4/files/share/default_pfx steamapps/compatdata/2430930
 
+# Export Proton paths
+ENV STEAM_COMPAT_CLIENT_INSTALL_PATH=$STEAM_PATH
+ENV STEAM_COMPAT_DATA_PATH=${STEAM_PATH}/steamapps/compatdata/2430930
+ENV PROTON=${STEAM_PATH}/compatibilitytools.d/Proton-proton-8.0-4/proton
 
+# Start Arkserver script
+## Set the ark path variable
+ENV Ark_PATH="${STEAM_PATH}/steamapps/common/ARK Survival Ascended Dedicated Server/ShooterGame"
+## Copy the start-ark script to the container
+COPY start-ark.sh /usr/local/bin/ark-server
+## Set permissions on start-ark file
+RUN chmod +x /usr/local/bin/ark-server
 
-ENV PROTON=${STEAM_PATH}/compatibilitytools.d/${PROTON_VERSION}/proton
+# remove tools
 
-# Create wine dir
-RUN mkdir -p /home/ark/.cache/wine
-
-#RUN xvfb-run --auto-servernum wine /home/ark/steamcmd.exe +force_install_dir /home/ark +login anonymous +app_update 2399830 +quit
-# CMD wine64 /opt/arkserver/ShooterGame/Binaries/Win64/ArkAscendedServer.exe
+WORKDIR $HOME 
+ENTRYPOINT ["start-ark"]
