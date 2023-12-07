@@ -26,9 +26,9 @@ ENV PROTON=${STEAM_PATH}/compatibilitytools.d/${PROTON_VERSION}/proton
 ## Set the ark path variable
 ENV ARK_PATH="${STEAM_PATH}/steamapps/common/ARK Survival Ascended Dedicated Server/ShooterGame"
 ## Copy the start-ark script to the container
-COPY start-ark.sh /usr/local/bin/start-ark.sh
+COPY start-ark.sh /usr/local/bin/start-ark
 ## Set permissions on start-ark file
-RUN chmod +x /usr/local/bin/start-ark.sh
+RUN chmod +x /usr/local/bin/start-ark
 
 # Copy GameUserSettings.ini and Game.ini
 COPY GameUserSettings.ini $ARK_PATH/Saved/Config/WindowsServer/GameUserSettings.ini
@@ -42,4 +42,4 @@ RUN apt -y remove unzip wget
 RUN apt -y clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR $HOME
-ENTRYPOINT ["ark-server"]
+ENTRYPOINT ["start-ark"]
