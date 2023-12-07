@@ -9,7 +9,7 @@ cp -r /usr/share/Game.ini $ARK_PATH/Saved/Config/WindowsServer/Game.ini
 
 # Start server with proton
 SERVER_CMD="$PROTON run \"${ARK_PATH}/Binaries/Win64/ArkAscendedServer.exe\" \
-  \"TheIsland_WP?listen?SessionName=${SESSION_NAME}?ServerAdminPassword=${ADMIN_PASSWORD}?MapPlayerLocation=${ShowPlayerOnMAP}?Port=${GAME_PORT}?PreventDownloadSurvivors${PreventSurvivorDownload}?PreventDownloadItems=${PreventItemDownload}?PreventDownloadDinos=${PreventDinoDownload}?PreventUploadSurvivors=${PreventSurvivorUpload}?PreventUploadItems=${PreventItemUpload}?PreventUploadDinos=${PreventDinoUpload}?QueryPort=${QUERY_PORT}?MaxPlayers=${MAX_PLAYERS}?\""
+  \"TheIsland_WP?listen?SessionName=${SESSION_NAME}?ServerAdminPassword=${ADMIN_PASSWORD}?MapPlayerLocation=${ShowPlayerOnMAP}BabyImprintingStatScaleMultiplie=${ImprintEfficency}?bUseCorpseLocator=${CorpseLocator}?bAllowPlatformSaddleMultiFloors=${MultipleFloorsOnPlatformSaddle}?OverrideOfficialDifficulty=${Difficulty}?FuelConsumptionIntervalMultiplier=${FuelConsumption}?EggHatchSpeedMultiplier=${EggHatchSpeed}?Port=${GAME_PORT}MatingIntervalMultiplier=${MatingInterval}?LayEggIntervalMultiplier=${LayEggInterval}?PoopIntervalMultiplier=${PoopInterval}?bAllowSpeedLeveling=${SpeedLeveling}?bAllowFlyerSpeedLeveling=${FlyerSpeedLeveling}?ActiveEvent=${ActiveEvent}?PerPlatformMaxStructuresMultiplier=${StructurePerPlatform}?PreventDownloadSurvivors${PreventSurvivorDownload}?PreventDownloadItems=${PreventItemDownload}?PreventDownloadDinos=${PreventDinoDownload}?PreventUploadSurvivors=${PreventSurvivorUpload}?PreventUploadItems=${PreventItemUpload}?PreventUploadDinos=${PreventDinoUpload}?QueryPort=${QUERY_PORT}?MaxPlayers=${MAX_PLAYERS}?\""
 
 # Install mods
 if [ -n "$MODS" ]; then
